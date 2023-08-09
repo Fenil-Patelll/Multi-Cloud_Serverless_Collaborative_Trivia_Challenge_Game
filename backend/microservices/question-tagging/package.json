@@ -1,0 +1,25 @@
+{
+  "name": "question-tagging",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "serverless.com",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-google-cloudfunctions": "^4.6.0"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0",
+    "axios": "^0.24.0",
+    "cors": "^2.8.5",
+    "serverless": "^3.32.2",
+    "serverless-plugin-scripts": "^1.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.cs.dal.ca/sumitk/csci5410-summer-23-sdp33.git"
+  }
+}

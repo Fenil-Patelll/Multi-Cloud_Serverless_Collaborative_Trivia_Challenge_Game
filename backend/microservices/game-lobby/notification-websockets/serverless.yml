@@ -1,0 +1,74 @@
+service: notification-websockets
+frameworkVersion: "3"
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  iam:
+    role: arn:aws:iam::558280373626:role/LabRole
+
+functions:
+  connect:
+    handler: src/functions/connect.main
+    events:
+      - websocket:
+          route: $connect
+  disconnect:
+    handler: src/functions/disconnect.main
+    events:
+      - websocket:
+          route: $disconnect
+  pushMessage:
+    handler: src/functions/pushMessage.main
+    events:
+      - http:
+          path: /push-message
+          method: POST
+  sendMessage:
+    handler: src/functions/sendMessage.main
+    events:
+      - eventBridge:
+          eventBus: ${self:custom.eventBusArn}
+          pattern:
+            source:
+              - notifications-events
+            detail-type:
+              - MESSAGE_SENT
+  onNewGameAdded:
+    handler: functions/firestoreTrigger.onNewGameAdded
+
+resources:
+  Resources:
+    connectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: connections
+        AttributeDefinitions:
+          - AttributeName: games
+            AttributeType: S
+        KeySchema:
+          - AttributeName: games
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+custom:
+  dynamodb:
+    table: connections
+  eventBusArn: arn:aws:events:${self:provider.region}:558280373626:event-bus/game-events
+  offline:
+    httpPort: 7070
+    websocketPort: 7071
+
+package:
+  include:
+    - serviceAccountKey.json
+  exclude:
+    - tests/**

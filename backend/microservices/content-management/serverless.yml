@@ -1,0 +1,141 @@
+service: content-management
+frameworkVersion: "3"
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  iam:
+    role: arn:aws:iam::558280373626:role/LabRole
+  apiGateway:
+    shouldStartNameWithService: true
+    resourcePolicy:
+      - Effect: Allow
+        Principal: "*"
+        Action: execute-api:Invoke
+        Resource:
+          - execute-api:/*/*/*
+  httpApi:
+    cors: true
+
+functions:
+  getGames:
+    handler: src/games/getGames.main
+    events:
+      - httpApi:
+          path: /games
+          method: GET
+  getGame:
+    handler: src/games/getGame.main
+    events:
+      - httpApi:
+          path: /games/{id}
+          method: GET
+
+  createGame:
+    handler: src/games/createGame.main
+    events:
+      - httpApi:
+          path: /games
+          method: POST
+
+  editGame:
+    handler: src/games/editGame.main
+    events:
+      - httpApi:
+          path: /games/{id}
+          method: PUT
+
+  deleteGame:
+    handler: src/games/deleteGame.main
+    events:
+      - httpApi:
+          path: /games/{id}
+          method: DELETE
+
+  getQuestions:
+    handler: src/questions/getQuestions.main
+    events:
+      - httpApi:
+          path: /questions
+          method: GET
+
+  getQuestion:
+    handler: src/questions/getQuestion.main
+    events:
+      - httpApi:
+          path: /questions/{id}
+          method: GET
+  getQuestionByCategory:
+    handler: src/questions/getQuestionByCategory.main
+    events:
+      - httpApi:
+          path: /questions/category/{category}
+          method: GET
+
+  createQuestion:
+    handler: src/questions/createQuestion.main
+    events:
+      - httpApi:
+          path: /questions
+          method: POST
+
+  editQuestion:
+    handler: src/questions/editQuestion.main
+    events:
+      - httpApi:
+          path: /questions/{id}
+          method: PUT
+
+  deleteQuestion:
+    handler: src/questions/deleteQuestion.main
+    events:
+      - httpApi:
+          path: /questions/{id}
+          method: DELETE
+
+resources:
+  Resources:
+    TriviaGamesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: TriviaGames
+        AttributeDefinitions:
+          - AttributeName: gameId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: gameId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    TriviaQuestionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: TriviaQuestions
+        AttributeDefinitions:
+          - AttributeName: questionId
+            AttributeType: S
+          - AttributeName: category
+            AttributeType: S
+        KeySchema:
+          - AttributeName: questionId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: CategoryIndex
+            KeySchema:
+              - AttributeName: category
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1

@@ -1,0 +1,21 @@
+service: virtual-assistance
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Resource: '*'
+  role: arn:aws:iam::377747625142:role/LabRole
+
+functions:
+  lexFulfillment:
+    handler: index.lexFulfillment
+      
+
+      
+
+

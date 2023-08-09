@@ -1,0 +1,67 @@
+service: leaderboards
+
+provider:
+  name: google
+  stage: dev
+  runtime: nodejs14
+  region: us-central1
+  project: b009040970-serverless-393804
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-google-cloudfunctions
+  - serverless-plugin-scripts
+
+package:
+  exclude:
+    - node_modules/**
+    - .gitignore
+    - .git/**
+
+functions:
+  updateLeaderboard:
+    handler: updateLeaderboard
+    events:
+      - event:
+          eventType: providers/cloud.pubsub/eventTypes/topic.publish
+          resource: 'projects/b009040970-serverless-393804/topics/leaderboard-topic'
+    environment:
+      FETCH_USER_DETAIL_URL: 'https://ulf9citxu9.execute-api.us-east-1.amazonaws.com'
+      FETCH_TEAM_DETAIL_URL: 'https://mjvsjlx9pa.execute-api.us-east-1.amazonaws.com/dev'
+      NOTIFICATION_URL: 'https://bu31ruyo8j.execute-api.us-east-1.amazonaws.com/dev/notifications/publish'
+  publishLeaderboardUpdate:
+    handler: publishLeaderboardUpdate
+    events:
+      - http: POST /
+    environment:
+      PROJECT_ID: b009040970-serverless-393804
+      LEADERBOARD_TOPIC_NAME: leaderboard-topic
+  getGlobalLeaderboard:
+    handler: getGlobalLeaderboard
+    events:
+      - http: GET /
+  filterLeaderboardByTimeFrame:
+    handler: filterLeaderboardByTimeFrame
+    events:
+      - http: POST /
+  getEntityStatistics:
+    handler: getEntityStatistics
+    events:
+      - http: POST /
+  getLeaderboardByEntityId:
+    handler: getLeaderboardByEntityId
+    events:
+      - http: POST /
+
+custom:
+  scripts:
+    commands:
+      make-public-filterLeaderboardByTimeFrame: gcloud functions add-iam-policy-binding ${self:service}-${self:provider.stage}-filterLeaderboardByTimeFrame --member="allUsers" --role="roles/cloudfunctions.invoker" --project=${self:provider.project} --region=${self:provider.region}
+      make-public-getEntityStatistics: gcloud functions add-iam-policy-binding ${self:service}-${self:provider.stage}-getEntityStatistics --member="allUsers" --role="roles/cloudfunctions.invoker" --project=${self:provider.project} --region=${self:provider.region}
+      make-public-getGlobalLeaderboard: gcloud functions add-iam-policy-binding ${self:service}-${self:provider.stage}-getGlobalLeaderboard --member="allUsers" --role="roles/cloudfunctions.invoker" --project=${self:provider.project} --region=${self:provider.region}
+      make-public-getLeaderboardByEntityId: gcloud functions add-iam-policy-binding ${self:service}-${self:provider.stage}-getLeaderboardByEntityId --member="allUsers" --role="roles/cloudfunctions.invoker" --project=${self:provider.project} --region=${self:provider.region}
+      make-public-publishLeaderboardUpdate: gcloud functions add-iam-policy-binding ${self:service}-${self:provider.stage}-publishLeaderboardUpdate --member="allUsers" --role="roles/cloudfunctions.invoker" --project=${self:provider.project} --region=${self:provider.region}
+      make-public-updateLeaderboard: gcloud functions add-iam-policy-binding ${self:service}-${self:provider.stage}-updateLeaderboard --member="allUsers" --role="roles/cloudfunctions.invoker" --project=${self:provider.project} --region=${self:provider.region}
+    hooks:
+      'after:deploy:deploy': npx sls make-public-filterLeaderboardByTimeFrame | npx sls make-public-getEntityStatistics | npx sls make-public-getGlobalLeaderboard | npx sls make-public-getLeaderboardByEntityId | npx sls make-public-publishLeaderboardUpdate | npx sls make-public-updateLeaderboard

@@ -1,0 +1,45 @@
+p {
+  padding: 0;
+  color: #27374D;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.link {
+  text-decoration: none;
+  color: #27374D;
+  font-size: 14px;
+}
+
+.link:hover {
+  text-decoration: none;
+  color: #526D82;
+}
+
+.btn {
+  margin-top: 20px;
+  background-color: #27374D;
+  color: #DDE6ED;
+  border-radius: 30px;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background-color: transparent;
+  color: #27374D;
+  border: 1px solid #27374D;
+  transition: 0.3s ease;
+  font-weight: bold;
+}

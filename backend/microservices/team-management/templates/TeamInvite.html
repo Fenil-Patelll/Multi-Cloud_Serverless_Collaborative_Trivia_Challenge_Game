@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Team Invitation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .team-info {
+            margin-bottom: 20px;
+        }
+        .team-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .team-description {
+            margin-bottom: 10px;
+        }
+        .button-container {
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            color: #fff;
+        }
+        .accept {
+            background-color: #4CAF50;
+        }
+        .reject {
+            background-color: #F44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="team-info">
+            <p class="team-name">{teamName}</p>
+            <p class="team-description">Your friend has invited you to join trivia challenges</p>
+        </div>
+        <div class="button-container">
+            <a href="https://mjvsjlx9pa.execute-api.us-east-1.amazonaws.com/dev/api/teams/acceptreject/{teamId}/{memberId}/accept" class="button accept">Accept</a>
+            <a href="https://mjvsjlx9pa.execute-api.us-east-1.amazonaws.com/dev/api/teams/acceptreject/{teamId}/{memberId}/reject" class="button reject">Reject</a>
+        </div>
+    </div>
+</body>
+</html>

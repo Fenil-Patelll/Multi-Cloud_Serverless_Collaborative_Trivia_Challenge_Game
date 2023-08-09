@@ -1,0 +1,24 @@
+{
+  "name": "team-management",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "aws-sdk": "^2.1312.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "dynamoose": "^3.2.0",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.4",
+    "openai": "^3.2.1",
+    "serverless-http": "^3.1.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^12.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.cs.dal.ca/sumitk/csci5410-summer-23-sdp33.git"
+  },
+  "license": "MIT"
+}

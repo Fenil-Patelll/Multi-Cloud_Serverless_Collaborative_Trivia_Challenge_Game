@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Team Invitation Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .status-message {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .team-name {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .button-container {
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            color: #fff;
+        }
+        .back {
+            background-color: #2196F3;
+        }
+        .success {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+        .failure {
+            background-color: #F44336;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="team-name">
+            {teamName}
+        </div>
+        <div class="status-message failure">
+            Your friends will miss you for the trivia games.
+        </div>
+        <div class="button-container">
+            <a href="#" class="button back">Visit Trivia Titan</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+    "name": "fetch-games-api",
+    "version": "1.0.0",
+    "description": "API for Trivia Game",
+    "author": {
+        "name": "Naqeebali Shamsi",
+        "email": "naqeebali.shamsi@dal.ca"
+    },
+    "scripts": {
+        "test": "jest"
+    },
+    "devDependencies": {
+        "@types/jest": "^27.0.1",
+        "jest": "^27.0.6",
+        "serverless": "^3.32.2",
+        "serverless-dotenv-plugin": "^6.0.0",
+        "serverless-offline": "^12.0.4"
+    },
+    "dependencies": {
+        "@google-cloud/firestore": "^6.6.1",
+        "@google-cloud/pubsub": "^3.7.1",
+        "aws-sdk": "^2.1397.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.1.4",
+        "express": "^4.18.2",
+        "firebase-admin": "^11.9.0",
+        "firebase-functions": "^4.4.0",
+        "serverless-http": "^3.1.1",
+        "uuid": "^9.0.0"
+    }
+}

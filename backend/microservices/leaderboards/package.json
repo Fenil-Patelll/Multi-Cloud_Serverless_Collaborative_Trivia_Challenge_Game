@@ -1,0 +1,30 @@
+{
+  "name": "leaderboards",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "serverless.com",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-google-cloudfunctions": "^4.6.0"
+  },
+  "dependencies": {
+    "@google-cloud/pubsub": "^3.7.1",
+    "aws-sdk": "^2.1312.0",
+    "axios": "^0.21.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "firebase-admin": "^11.9.0",
+    "serverless": "^3.32.2",
+    "serverless-plugin-scripts": "^1.0.2",
+    "uuid": "^9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.cs.dal.ca/sumitk/csci5410-summer-23-sdp33.git"
+  }
+}

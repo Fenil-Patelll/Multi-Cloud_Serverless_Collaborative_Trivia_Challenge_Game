@@ -1,0 +1,94 @@
+service: fetch-games-api
+frameworkVersion: "3"
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-1
+  iam:
+    role: arn:aws:iam::558280373626:role/LabRole
+
+functions:
+  connect:
+    handler: functions./connect.main
+    events:
+      - websocket:
+          route: $connect
+  disconnect:
+    handler: functions./disconnect.main
+    events:
+      - websocket:
+          route: $disconnect
+  sendMessage:
+    handler: functions./sendMessage.main
+    environment:
+      websocketsApiDomain:
+        Fn::Join:
+          - ''
+          - - Ref: WebsocketsApi
+            - .execute-api.
+            - ${self:provider.region}
+            - .amazonaws.com/
+            - ${self:provider.stage}
+    events:
+      - eventBridge:
+          eventBus: ${self:custom.eventBusArn}
+          pattern:
+            source:
+              - notifications-events
+            detail-type:
+              - MESSAGE_SENT
+  api:
+    handler: index.handler
+    timeout: 30
+    events:
+    - http:
+        path: api/fetch-games
+        method: get
+        cors:
+          origin: '*'
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+    - http:
+        path: api/sse
+        method: get
+        cors:
+          origin: '*'
+          headers:
+            - Content-Type   
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+    - http:
+        path: api/publish
+        method: post
+        cors:
+          origin: '*'
+          headers:
+            - Content-Type    
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+
+custom:
+  offline:
+    httpPort: 3001
+  eventBusArn: arn:aws:events:us-east-1:558280373626:event-bus/game-events
+  
+package:
+  include:
+    - serviceAccountKey.json

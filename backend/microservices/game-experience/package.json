@@ -1,0 +1,32 @@
+{
+  "name": "game-experience",
+  "version": "1.0.0",
+  "description": "<!-- title: 'AWS NodeJS Example' description: 'This template demonstrates how to deploy a NodeJS function running on AWS Lambda using the traditional Serverless Framework.' layout: Doc framework: v3 platform: AWS language: nodeJS priority: 1 authorLink: 'https://github.com/serverless' authorName: 'Serverless, inc.' authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4' -->",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.350.0",
+    "aws-sdk": "^2.1395.0",
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.4",
+    "dynamoose": "^3.2.0",
+    "express": "^4.18.2",
+    "firebase-admin": "^11.9.0",
+    "serverless-http": "^3.2.0",
+    "serverless-webpack": "^5.11.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@serverless/event-mocks": "^1.1.1",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-dynamodb-local": "^0.2.40",
+    "serverless-offline": "^12.0.4"
+  }
+}

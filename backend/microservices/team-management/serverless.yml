@@ -1,0 +1,231 @@
+service: team-management
+frameworkVersion: '3'
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  environment:
+    SNS_TOPIC_ARN: 'arn:aws:sns:us-east-1:377747625142:team-notification-topic'
+    TEAM_INVITATION_TOPIC_ARN: 'arn:aws:sns:us-east-1:377747625142:team-invitation-topic'
+    TEAM_ACCEPT_REJECT_TOPIC_ARN: 'arn:aws:sns:us-east-1:377747625142:team-accept-decline-topic'
+    SQS_ARN: 'arn:aws:sqs:us-east-1:377747625142:team-notification-queue'
+    NotificationTopicARN: 'arn:aws:sns:us-east-1:377747625142:TriviaGameNotificationAlertsTopic'
+    FETCH_USER_DETAIL_URL: 'https://ulf9citxu9.execute-api.us-east-1.amazonaws.com'
+    REGION: us-east-1
+    OPENAI_API_KEY: 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
+  iam:
+    role: arn:aws:iam::377747625142:role/LabRole
+
+functions:
+  createTeam:
+    handler: functions/createTeam.main
+    events:
+      - http:
+          path: /api/teams
+          method: POST
+          cors: true
+  getTeamById:
+    handler: functions/getTeamById.main
+    events:
+      - http:
+          path: /api/teams/get/{teamId}
+          method: GET
+          cors: true
+  getAllTeams:
+    handler: functions/getAllTeams.main
+    events:
+      - http:
+          path: /api/teams
+          method: GET
+          cors: true
+  deleteTeamById:
+    handler: functions/deleteTeamById.main
+    events:
+      - http:
+          path: /api/teams/delete/{id}
+          method: DELETE
+          cors: true
+  generateTeamName:
+    handler: functions/generateTeamName.main
+    events:
+      - http:
+          path: /api/teams/generate/teamName
+          method: GET
+          cors: true
+  handleTeamInvitation:
+    handler: functions/handleTeamInvitation.main
+    events:
+      - http:
+          path: /api/teams/sendinvites/{teamId}/
+          method: POST
+          cors: true
+  sendTeamInvite:
+    handler: functions/sendTeamInvite.main
+    events:
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:377747625142:team-invitation-queue
+    environment:
+      TeamInvitationQueueUrl: 'https://sqs.us-east-1.amazonaws.com/377747625142/team-invitation-queue'
+  handleacceptRejectTeamInvitation:
+    handler: functions/handleacceptRejectTeamInvitation.main
+    events:
+      - http:
+          path: /api/teams/acceptreject/{teamId}/{memberId}/{option}
+          method: GET
+          cors: true
+  acceptRejectTeamInvite:
+    handler: functions/acceptRejectTeamInvite.main
+    events:
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:377747625142:team-accept-decline-queue
+    environment:
+      TeamInvitationQueueUrl: 'https://sqs.us-east-1.amazonaws.com/377747625142/team-accept-decline-queue'
+  deleteTeamMember:
+    handler: functions/deleteTeamMember.main
+    events:
+      - http:
+          path: /api/teams/deletemembers/{teamId}/{memberId}
+          method: DELETE
+          cors: true
+  updateTeamMember:
+    handler: functions/updateTeamMember.main
+    events:
+      - http:
+          path: /api/teams/updatemembers/{teamId}/{memberId}
+          method: POST
+          cors: true
+  updateTeamStat:
+    handler: functions/updateTeamStat.main
+    events:
+      - http:
+          path: /api/teams/updatestats/{teamId}
+          method: POST
+          cors: true
+  getTeamStats:
+    handler: functions/getTeamStats.main
+    events:
+      - http:
+          path: /api/teams/getstats/{teamId}
+          method: GET
+          cors: true
+  teamEmailNotification:
+    handler: functions/sendEmail.main
+    events:
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:377747625142:team-notification-queue
+    environment:
+      TeamNotificationQueueUrl: 'https://sqs.us-east-1.amazonaws.com/377747625142/team-notification-queue'
+      EMAIL: sumit101.kumar.01@gmail.com
+      PASSWORD: rzqaouvdhjfqmvqd
+
+resources:
+  Resources:
+    TeamInvitationTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: team-invitation-topic
+        DisplayName: Trivia Team Invitation
+    
+    TeamInvitationQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: team-invitation-queue
+
+    TeamInvitationSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Protocol: sqs
+        TopicArn: !Ref TeamInvitationTopic
+        Endpoint: !GetAtt TeamInvitationQueue.Arn
+
+    TeamInvitationQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal: '*'
+              Action: sqs:SendMessage
+              Resource: !GetAtt TeamInvitationQueue.Arn
+              Condition:
+                ArnEquals:
+                  'aws:SourceArn':
+                    - !Ref TeamInvitationTopic
+        Queues:
+          - !Ref TeamInvitationQueue
+
+    TeamAcceptDeclineTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: team-accept-decline-topic
+        DisplayName: Trivia Team Accept Decline Invitation
+    
+    TeamAcceptDeclineQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: team-accept-decline-queue
+
+    TeamAcceptDeclineSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Protocol: sqs
+        TopicArn: !Ref TeamAcceptDeclineTopic
+        Endpoint: !GetAtt TeamAcceptDeclineQueue.Arn
+
+    TeamAcceptDeclineQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal: '*'
+              Action: sqs:SendMessage
+              Resource: !GetAtt TeamAcceptDeclineQueue.Arn
+              Condition:
+                ArnEquals:
+                  'aws:SourceArn':
+                    - !Ref TeamAcceptDeclineTopic
+        Queues:
+          - !Ref TeamAcceptDeclineQueue
+
+    TeamNotificationTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: team-notification-topic
+        DisplayName: Trivia Notification
+
+    TeamNotificationQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: team-notification-queue
+
+    TeamNotificationSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Protocol: sqs
+        TopicArn: !Ref TeamNotificationTopic
+        Endpoint: !GetAtt TeamNotificationQueue.Arn
+
+    TeamNotificationQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal: '*'
+              Action: sqs:SendMessage
+              Resource: !GetAtt TeamNotificationQueue.Arn
+              Condition:
+                ArnEquals:
+                  'aws:SourceArn':
+                    - !Ref TeamNotificationTopic
+        Queues:
+          - !Ref TeamNotificationQueue

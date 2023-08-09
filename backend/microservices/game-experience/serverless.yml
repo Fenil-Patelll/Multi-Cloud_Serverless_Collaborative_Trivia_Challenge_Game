@@ -1,0 +1,106 @@
+service: game-experience
+frameworkVersion: '3'
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-offline
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'sns:*'
+        - 'sqs:*'
+      Resource: '*'
+  role: arn:aws:iam::377747625142:role/LabRole
+
+functions:
+  submitAnswer:
+    handler: functions/submitAnswer.submitAnswer
+    events:
+      - http:
+          path: /api/games/submit_questions/{questionId}
+          method: POST
+          cors: true
+  sendMessages:
+    handler: functions/sendMessages.sendMessages
+    events:
+      - http:
+          path: /api/games/chat/send
+          method: POST
+          cors: true
+  getMessages:
+    handler: functions/getMessages.getMessages
+    timeout: 30
+    events:
+      - http:
+          path: /api/games/chat/get/{teamId}
+          method: GET
+          cors: true          
+  realTimeScore:
+    handler: functions/realTimeScore.realTimeScore
+    timeout: 30
+    events:
+      - http:
+          path: /api/games/questions/{questionId}/score
+          method: POST
+          cors: true
+
+resources:
+  Resources:
+    ChatSNSTopic:
+      Type: 'AWS::SNS::Topic'
+      Properties:
+        TopicName: 'ChatTopic'
+    ChatSQSQueue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: 'ChatQueue'
+    SnsSubscription:
+      Type: 'AWS::SNS::Subscription'
+      Properties:
+        TopicArn: 
+          Ref: 'ChatSNSTopic'
+        Protocol: 'sqs'
+        Endpoint: 
+          Fn::GetAtt: 
+            - ChatSQSQueue
+            - Arn
+    ChatQueuePolicy:
+      Type: 'AWS::SQS::QueuePolicy'
+      Properties:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Principal: '*'
+              Action: 'SQS:SendMessage'
+              Resource: 
+                Fn::GetAtt:
+                  - ChatSQSQueue
+                  - Arn
+              Condition:
+                ArnEquals:
+                  'aws:SourceArn': 
+                    Ref: 'ChatSNSTopic'
+        Queues:
+          - "https://sqs.us-east-1.amazonaws.com/377747625142/ChatQueue"
+
+    ChatTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: 'Chat'
+        AttributeDefinitions:
+          - AttributeName: 'chatId'
+            AttributeType: 'S'
+        KeySchema:
+          - AttributeName: 'chatId'
+            KeyType: 'HASH'
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    
