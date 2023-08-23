@@ -17,7 +17,7 @@ provider:
     NotificationTopicARN: 'arn:aws:sns:us-east-1:377747625142:TriviaGameNotificationAlertsTopic'
     FETCH_USER_DETAIL_URL: 'https://ulf9citxu9.execute-api.us-east-1.amazonaws.com'
     REGION: us-east-1
-    OPENAI_API_KEY: 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
+    OPENAI_API_KEY: 
   iam:
     role: arn:aws:iam::377747625142:role/LabRole
 
