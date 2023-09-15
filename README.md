@@ -55,6 +55,9 @@ The GCP services used in this project include:
 - Chat GPT: used for natural language processing and chatbot functionality
 - Pub/Sub: used for messaging and event-driven communication between services
 - DataStudio and Looker Studio: used for data visualization and analytics
+![serverless_architecture](https://github.com/Fenil-Patelll/Multi-Cloud_Serverless_Collaborative_Trivia_Challenge_Game/assets/58760354/ba1405c5-69d5-46f6-a93c-af8bd7fe07cb)
+
+
 
 ## Contributing
 
