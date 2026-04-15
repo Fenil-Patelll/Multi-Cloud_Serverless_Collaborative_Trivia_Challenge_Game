@@ -9,13 +9,13 @@
   "author": "Naqeebali Shamsi",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-apigatewaymanagementapi": "^3.352.0",
-    "@aws-sdk/client-dynamodb": "^3.352.0",
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.1030.0",
+    "@aws-sdk/client-dynamodb": "^3.1030.0",
     "@aws-sdk/lib-dynamodb": "^3.352.0",
     "aws-sdk": "^2.1400.0",
-    "axios": "^1.4.0",
+    "axios": "^1.15.0",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2"
+    "express": "^4.22.1"
   },
   "devDependencies": {
     "serverless": "^4.34.0",
