@@ -15,7 +15,7 @@
     "@google-cloud/functions-framework": "^3.3.0",
     "axios": "^0.24.0",
     "cors": "^2.8.5",
-    "serverless": "^3.32.2",
+    "serverless": "^4.34.0",
     "serverless-plugin-scripts": "^1.0.2"
   },
   "repository": {
