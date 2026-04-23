@@ -21,7 +21,7 @@
     "firebase-admin": "^13.8.0",
     "serverless": "^4.34.0",
     "serverless-plugin-scripts": "^1.0.2",
-    "uuid": "^9.0.0"
+    "uuid": "^14.0.0"
   },
   "repository": {
     "type": "git",

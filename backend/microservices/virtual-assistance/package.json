@@ -13,10 +13,10 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1030.0",
     "aws-sdk": "^2.1395.0",
-    "axios": "^1.15.0",
+    "axios": "^1.15.2",
     "dotenv": "^16.1.4",
     "express": "^4.22.1",
     "serverless-http": "^3.2.0",
-    "uuid": "^9.0.0"
+    "uuid": "^14.0.0"
   }
 }
