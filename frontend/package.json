@@ -12,7 +12,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "amazon-cognito-identity-js": "^6.3.1",
+    "amazon-cognito-identity-js": "^6.3.17",
     "aws-sdk": "^2.1693.0",
     "axios": "^1.17.0",
     "bootstrap": "^5.3.0",
